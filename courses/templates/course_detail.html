@@ -1,0 +1,19 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+  <h2>{{ course.title }}</h2>
+  {% if course.content %}
+    {% include "course_content.html" %}
+  {% endif %}
+  <form method="POST" action={% url "course_status_update" course.id %}>
+    <input type="hidden" value="started" name="status"></input>
+    {% csrf_token %}
+    <input type="submit" value="Start"></input>
+  </form>
+
+  <form method="POST" action={% url "course_status_update" course.id %}>
+    {% csrf_token %}
+    <input type="hidden" value="completed" name="status"></input>    
+    <input type="submit" value="Complete"></input>
+  </form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+  <h2>{{ organization.name }}</h2>
+  <ul>
+    <li>Type: {{ organization.org_type }} </li>
+    <li>Training Year Start: {{ organization.training_year_start }}</li>
+    <li>Billing Enabled: {{ organization.billing_enabled }}</li>
+  </uL>
+  <h3>Course Libraries</h3>
+  <p><a href="{% url "admin_org_course_library_create" organization_id=organization.id %}">Assign Course Library</a>
+  <ul>
+    {% for cl in organization.course_libraries.all %}
+      <li>{{ cl.course_library.title }} <a href="{% url "admin_org_course_library_delete" pk=cl.id %}">Unassign</a></li>
+      {% endfor %}
+   </ul>
+  <h3>Learners</h3>
+  <p><a href="{% url "admin_report_learner_list" organization.id %}">View Learner List</a> <a href="{% url "admin_report_course_list" organization.id %}">View Courses</a></p>
+{% endblock %}

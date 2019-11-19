@@ -1,0 +1,29 @@
+{% extends "site_base.html" %}
+{% load bootstrap_tags %}
+{% load render_table from django_tables2 %}
+{% block body %}
+
+<h3>{{ course.title }} Completion Status</h3>
+<p>Members of <a href="{% url "admin_org_view" organization.id %}">{{organization.name}}</a></p>
+{% render_table table %}
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Learner</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in status %}
+    <tr>
+      <td>{{ s.learner.user.first_name }} {{ s.learner.user.last_name }}</td>
+      <td>{{ s.status }}</td>
+      <td>{{ s.status_datetime }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

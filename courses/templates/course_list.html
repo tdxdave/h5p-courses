@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+{{ block.super }}
+<h2>Courses</h2>
+<p><a href="{% url "admin_course_create" %}">Add Course</a></p>
+<ul>
+  {% for course in courses %}
+  <li><a href="{% url "admin_course_view" course.id %}">{{ course.title }}</a> <a class="btn btn-default" href="{% url "admin_course_update" course.id %}">Edit</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

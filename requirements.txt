@@ -1,0 +1,14 @@
+Django==2.2.7
+django-bootstrap-form
+django-debug-toolbar
+django-forms-bootstrap
+django-tables2
+django-taggit
+django-test-plus
+django-user-accounts
+flake8
+-e git+https://github.com/tdxdave/H5PP.git@97283590299048b4de3a847c1b4eaa43df6f369e#egg=H5PP-master
+Pillow
+pinax-theme-bootstrap
+psycopg2
+
