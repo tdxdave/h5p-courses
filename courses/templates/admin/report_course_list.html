@@ -1,0 +1,22 @@
+{% extends "site_base.html" %}
+{% load bootstrap_tags %}
+{% block body %}
+<h2>{{organization.name}} Courses</h2>
+<p><a href="{% url "admin_org_view" organization.id %}">Back to Organization Details</a></p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Course Title</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <td>{{course.title}}</td>
+      <td><a href="{% url "admin_report_org_course_learner_list" organization.id course.id %}">View Learners</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

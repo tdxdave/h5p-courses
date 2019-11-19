@@ -1,0 +1,26 @@
+{% extends "site_base.html" %}
+{% load bootstrap_tags %}
+{% block body %}
+
+<h3>{{ learner.user.first_name }} {{ learner.user.last_name }} Course Completion Status</h3>
+<p>Member of <a href="{% url "admin_report_learner_list" organization.id %}">{{organization.name}}</a></p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Course</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in status %}
+    <tr>
+      <td>{{ s.course.title }}</td>
+      <td>{{ s.status }}</td>
+      <td>{{ s.status_datetime }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

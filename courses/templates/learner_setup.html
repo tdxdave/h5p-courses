@@ -1,0 +1,15 @@
+{% extends "site_base.html" %}
+{% load bootstrap_tags %}
+{% block body %}
+<div class="row">
+  <div class="col-md-6">
+            <p class="lead">This is your first time accessing the online training system OR you have logged in previously without entering an email address. Please answer the following questions to continue.</p>
+    <form method="POST">
+      {{ form|as_bootstrap }}
+      {% csrf_token %}
+      <p>You can enter an email address to have completion certificates emailed to you. Entering an email will allow our system to track your progress and allow you to stop a training presentation and login at a later time to complete it.</p>  
+        <input type="submit" value="Login"></input>
+    </form>
+  </div>
+</div>
+{% endblock %}

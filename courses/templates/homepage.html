@@ -1,0 +1,61 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}***REMOVED*** ***REMOVED*** Management Online Training{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body_base %}
+
+<section class="jumbotron">
+        <div class="container">
+            {% include "_messages.html" %}
+            <h1>{% blocktrans %}Welcome to<br>***REMOVED*** ***REMOVED*** Management's Online Training System{% endblocktrans %}</h1>
+            <p>
+                {% blocktrans %}
+                Your employer has teamed up with ***REMOVED*** ***REMOVED*** Management to provide online safety and health training.
+                {% endblocktrans %}
+            </p>
+            {% if not user.is_authenticated %}
+            {% url "learner_login" as login_url %}
+            {% url "account_signup" as signup_url %}
+            <p>{% blocktrans %}<a href="{{ login_url }}" class="btn btn-default">Log In</a> to get started.{% endblocktrans %}</p>
+            {% endif %}
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}{% endblocktrans %}</h2>
+            <p class="lead">This is the home of ***REMOVED*** ***REMOVED*** Management’s Online Safety and Health training presentations. In order to participate in the training program(s) enter your Full Name, and optionally enter your email address, then simply click on the dropdown menu below and select your employer and enter the password provided to you by your employer.</p>
+            <p class="lead">You will then be able to select from several different training opportunities and you will be asked whether you are instructional staff or non-instructional staff. Watch the video presentation by clicking the play button and at the conclusion you will take a short quiz. You must score 80% or better in order to get a training certificate. If you fail to achieve 80% re-watch the presentation and attempt the test again. If you are unable to successfully complete the test contact your supervisor for more information on the next steps to complete the training requirement.</p>
+<p class="lead">Once you have successfully completed the test an icon will appear to click to receive a certificate of training. Additionally, if you have enetered your email address, a copy of the certificate will be emailed to you. Once you have printed the certificate you will need a representative from your employer to sign the certificate and provide you with any additional necessary information. If you have any questions or concerns please contact ***REMOVED*** ***REMOVED*** Management at (518) 860-1758.</p>
+<!--
+<div class="feature-columns">
+                <div>
+                    <i class="fa fa-cubes fa-3x"></i><br>
+                    {% blocktrans %}
+                    {% endblocktrans %}
+                </div>
+                <div>
+                    <i class="fa fa-puzzle-piece fa-3x"></i><br>
+                    {% blocktrans %}
+                    {% endblocktrans %}
+                </div>
+                <div>
+                    <i class="fa fa-tint fa-3x"></i><br>
+                    {% blocktrans %}
+                    {% endblocktrans %}
+                </div>
+            </div>-->
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <p class="lead text-center">
+                {% blocktrans %}
+                {% endblocktrans %}
+            </p>
+        </div>
+    </section>
+{% endblock %}
