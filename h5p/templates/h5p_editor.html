@@ -1,0 +1,186 @@
+{% extends "site_base.html" %}
+{% load staticfiles %}
+
+{% block page_scripts %}
+<script type="text/javascript" src="{% static "/js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/djangoajax.js"%}"></script>
+<script type="text/javascript" src="{% static "/js/h5p.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5p-event-dispatcher.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5p-x-api-event.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5p-x-api.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5p-content-type.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5peditor-editor.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5peditor.js" %}"></script>
+<script type="text/javascript" src="{% static "js/language/en.js" %}"></script>
+<script type="text/javascript" src="{% static "/js/h5peditor-init.js" %}"></script>
+
+
+<script type="text/javascript">
+
+(function ($) {
+var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+window.H5PIntegration = {
+  "baseUrl": "http://{{SITE_DOMAIN}}", // No trailing slash
+  "url": "/site_media/media/h5p/",          // Relative to web root
+  "postUserStatistics": true,         // Only if user is logged in
+  "ajaxPath": "{{ajax_path}}?action=",
+  "ajax": {
+    // Where to post user results
+    "setFinished": "{{set_finished_url}}",
+    // Words beginning with : are placeholders
+    "contentUserData": "{{continue_user_data}}"
+  },
+  "saveFreq": 30, // How often current content state should be saved. false to disable.
+  "user": { // Only if logged in !
+    "name": "{{request.user.first_name}}",
+    "mail": "{{request.user.email}}"
+  },
+  "siteUrl": "{{site_url}}", // Only if NOT logged in!
+  "l10n": { // Text string translations
+    "H5P": {
+      "fullscreen": "Fullscreen",
+      "disableFullscreen": "Disable fullscreen",
+      "download": "Download",
+      "copyrights": "Rights of use",
+      "embed": "Embed",
+      "size": "Size",
+      "showAdvanced": "Show advanced",
+      "hideAdvanced": "Hide advanced",
+      "advancedHelp": "Include this script on your website if you want dynamic sizing of the embedded content:",
+      "copyrightInformation": "Rights of use",
+      "close": "Close",
+      "title": "Title",
+      "author": "Author",
+      "year": "Year",
+      "source": "Source",
+      "license": "License",
+      "thumbnail": "Thumbnail",
+      "noCopyrights": "No copyright information available for this content.",
+      "downloadDescription": "Download this content as a H5P file.",
+      "copyrightsDescription": "View copyright information for this content.",
+      "embedDescription": "View the embed code for this content.",
+      "h5pDescription": "Visit H5P.org to check out more cool content.",
+      "contentChanged": "This content has changed since you last used it.",
+      "startingOver": "You'll be starting over.",
+      "by": "by",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "subLevel": "Sublevel"
+    }
+  },
+  "loadedJs": [], // Only required when Embed Type = div
+  "loadedCss": [],
+  "contents": [],
+  "editor": {
+    "filesPath":"/static/",
+    "fileIcon":{
+      "path":"/images/binary-file.png",
+      "width":"50",
+      "height":"50"
+    },
+    "ajaxPath": "{{ajax_path}}?action=",
+    "libraryUrl":"/site_media/media/h5p/libraries/",
+    "copyrightSemantics":{"name":"copyright","type":"group","label":"Copyright information","fields":[{"name":"title","type":"text","label":"Title","placeholder":"La Gioconda","optional":true},
+{"name":"author","type":"text","label":"Author","placeholder":"Leonardo da Vinci","optional":true},
+{"name":"year","type":"text","label":"Year(s)","placeholder":"1503 - 1517","optional":true},
+{"name":"source","type":"text","label":"Source","placeholder":"http:\/\/en.wikipedia.org\/wiki\/Mona_Lisa","optional":true,"regexp":{"pattern":"^http[s]?:\/\/.+","modifiers":"i"}},
+{"name":"license","type":"select","label":"License","default":"U","options":[
+{"value":"U","label":"Undisclosed"},
+{"value":"CC BY","label":"Attribution 4.0"},
+{"value":"CC BY-SA","label":"Attribution-ShareAlike 4.0"},
+{"value":"CC BY-ND","label":"Attribution-NoDerivs 4.0"},
+{"value":"CC BY-NC","label":"Attribution-NonCommercial 4.0"},
+{"value":"CC BY-NC-SA","label":"Attribution-NonCommercial-ShareAlike 4.0"},
+{"value":"CC BY-NC-ND","label":"Attribution-NonCommercial-NoDerivs 4.0"},
+{"value":"GNU GPL","label":"General Public License v3"},
+{"value":"PD","label":"Public Domain"},
+{"value":"ODC PDDL","label":"Public Domain Dedication and Licence"},
+{"value":"CC PDM","label":"Public Domain Mark"},
+{"value":"C","label":"Copyright"}]}]
+},
+"assets":{'js':[{% for js in all_js %}'{{js}}',{% endfor %}],
+          'css':[{% for css in all_css %}'{{css}}',{% endfor %}]}
+  }
+};
+
+$(document).ready(function() {
+  function getRow ($el) {
+    return $el.closest('.form-item');
+  }
+  function getEditorForm() {
+    return $('#h5p-content-node-form')
+  }
+  function getCreateType() {
+    return $('input[name="h5p_type"]');
+  }
+
+    var $editor = $('.h5p-editor');
+    var $fileField = $('input[name="h5p_file"]');
+
+    H5PEditor.init(
+      getEditorForm(),
+      getCreateType(),
+      getRow($fileField),
+      getRow($editor),
+      $editor,
+      $('input[name="h5p_library"]'),
+      $('input[name="h5p_params"]')
+    );
+console.log(H5P);
+console.log(H5P.instances);
+});
+})(H5P.jQuery);
+</script>
+{% endblock %}
+{% for css in all_css %}
+<link rel="stylesheet" href="{{css}}">
+{% endfor %}
+
+{% block body %}
+ <form class="node-form node-h5p_content-form" enctype="multipart/form-data" action="{% url 'h5p_add_content' %}" method="post" id="h5p-content-node-form" accept-charset="UTF-8">
+{% csrf_token %}
+<div><div class="form-item form-type-textfield form-item-title">
+  <label for="edit-title">Title <span class="form-required" title="This field is required.">*</span></label>
+ <input type="text" id="edit-title" name="name" value="" size="60" maxlength="128" class="form-text required" />
+</div>
+<input type="hidden" name="changed" value="" />
+<input type="hidden" name="json_content" value="{}" />
+<input type="hidden" name="h5p_library" value="0" />
+<div class="form-item form-type-radios form-item-h5p-type">
+  <label for="edit-h5p-type">HTML5 Content </label>
+ <div id="edit-h5p-type" class="form-radios"><div class="form-item form-type-radio form-item-h5p-type">
+     <input type="radio" id="edit-h5p-type-create" name="h5p_type" value="create" checked="checked" class="form-radio" />  <label class="option" for="edit-h5p-type-create">Create </label></div>
+<div class="form-item form-type-radio form-item-h5p-type">
+      <input type="radio" id="edit-h5p-type-create" name="h5p_type" value="upload" checked="checked" class="form-radio" />  <label class="option" for="edit-h5p-type-create">Upload </label>
+>
+</div>
+</div>
+</div>
+<div class="form-item form-type-file form-item-files-h5p">
+  <label for="edit-h5p">HTML 5 Package </label>
+ <input type="file" id="edit-h5p" name="h5p_file" size="60" class="form-file" />
+<div class="description">Select a .h5p file to upload and create interactive content from. You may start with the <a href="http://h5p.org/content-types-and-applications" target="_blank">example files</a> on H5P.org</div>
+</div>
+<div id="edit-h5p-editor" class="form-item form-type-item">
+  <label for="edit-h5p-editor">Select content type </label>
+ <div class="h5p-editor">Waiting for javascript...</div>
+</div>
+<h2 class="element-invisible">Vertical Tabs</h2><div class="vertical-tabs-panes"><fieldset class="h5p-action-bar-settings collapsible collapsed form-wrapper" id="edit-h5p-options"><legend><span class="fieldset-legend">H5P Options</span></legend><div class="fieldset-wrapper"><div class="form-item form-type-checkbox form-item-frame">
+ <input class="h5p-visibility-toggler form-checkbox" data-h5p-visibility-subject-selector=".h5p-action-bar-settings .form-item:not(.form-item-frame)" type="checkbox" id="edit-frame" name="frame" value="1" checked="checked" />  <label class="option" for="edit-frame">Display buttons (download, embed and copyright) </label>
+
+</div>
+<div class="form-item form-type-checkbox form-item-embed">
+ <input type="checkbox" id="edit-embed" name="embed" value="1" checked="checked" class="form-checkbox" />  <label class="option" for="edit-embed">Embed button </label>
+
+</div>
+<div class="form-item form-type-checkbox form-item-copyright">
+ <input type="checkbox" id="edit-copyright" name="copyright" value="1" checked="checked" class="form-checkbox" />  <label class="option" for="edit-copyright">Copyright button </label>
+
+</div>
+</div></fieldset>
+<input class="vertical-tabs-active-tab" type="hidden" name="additional_settings__active_tab" value="" />
+</div><div class="form-actions form-wrapper" id="edit-actions"><input type="submit" id="edit-submit" name="op" value="Save" class="form-submit" /></div></div>
+   <input type="hidden" name="h5p_library">
+   <input type="hidden" name="h5p_params">
+ </form>
+{% endblock %}
