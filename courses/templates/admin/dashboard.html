@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% block head_title %}Course Administration{% endblock %}
+
+{% block body %}
+<ul>
+  <li><a href="courses">Courses</a></li>
+  <li><a href="{% url "admin_courselibrary_list" %}">Course Libraries</a></li>
+  <li><a href="orgs">Organizations</a></li>    
+</ul>
+{% endblock %}
+  

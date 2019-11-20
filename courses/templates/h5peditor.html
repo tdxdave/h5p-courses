@@ -1,0 +1,100 @@
+{% extends "site_base.html" %}
+{% load staticfiles %}
+{% block body %}
+<script type="text/javascript" src="{% static "/h5p/js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/djangoajax.js"%}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/h5p.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/h5p-event-dispatcher.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/h5p-x-api-event.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/h5p-x-api.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/js/h5p-content-type.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/h5peditor/scripts/h5peditor-editor.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/h5peditor/scripts/h5peditor.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/h5peditor/language/en.js" %}"></script>
+<script type="text/javascript" src="{% static "/h5p/h5peditor/scripts/h5peditor-init.js" %}"></script>
+
+<script type="text/javascript">
+  H5PIntegration = {% autoescape off %} {{editor}} {% endautoescape %}
+</script>
+
+<script type="text/javascript">
+console.log("Hi There 0");
+styles = ["libs/darkroom.css",
+"styles/css/application.css"];
+languageFile = 'h5p/h5peditor/language/en.js';
+
+window.onload = function() {
+			document.getElementById('id_h5p_type_0').onclick = function() {
+				document.getElementsByTagName('label')[4].style.display = 'inline-block';
+				document.getElementsByTagName('p')[0].style.display = 'inline-block';
+				document.getElementById('id_h5p').style.display = '';
+				document.getElementsByTagName('label')[3].style.display = 'none';
+				document.getElementsByClassName('h5p-editor-iframe')[0].style.display = 'none'
+			}
+			document.getElementById('id_h5p_type_1').onclick = function() {
+				document.getElementsByTagName('label')[4].style.display = 'none';
+				document.getElementsByTagName('p')[0].style.display = 'none';
+				document.getElementById('id_h5p').style.display = 'none';
+				document.getElementsByTagName('label')[3].style.display = 'inline-block';
+				document.getElementsByClassName('h5p-editor-iframe')[0].style.display = 'inline-block';
+			}
+			ns.$('.h5peditor-form').hide();
+
+			var fileInput = document.getElementById("id_h5p"),
+			button = document.getElementsByClassName("file-trigger")[0],
+			result = document.getElementsByClassName("file-return")[0];
+
+			button.addEventListener( "keydown", function(event) {
+				if(event.keyCode == 13 || event.keyCode == 32) {
+					fileInput.focus();
+				}
+			});
+			button.addEventListener( "click", function(event) {
+				fileInput.focus();
+				return false;
+			});
+			fileInput.addEventListener( "change", function(event) {
+				result.innerHTML = this.value;
+			});
+		}
+</script>
+
+{% for css in all_css %}
+<link rel="stylesheet" href="{{css}}">
+{% endfor %}
+
+
+
+	<h3 class="h5p-admin-header">Interactive Editor {% if request.GET.title %}<br>{{request.GET.title}}{% endif %}</h3>
+	<form method="post" enctype="multipart/form-data" id="h5p-content-form">
+		{% csrf_token %}
+		<input type="submit" id="submit_editor" value="Create">
+		<br><br>
+		<label for="id_title" class="label_form"><b>Title</b></label>
+		{{form.title}}
+		{{form.h5p_type}}
+		<label for="h5p-editor-iframe" class="label_form">Select a new content type :</label>
+		<div class="h5p-editor">Waiting for javascript...</div>
+		{{form.json_content}}
+		{{form.disable}}
+		{{form.h5p_library}}
+		<br>
+		<div class="file-container">
+			{{ form.h5p }}
+			<label for="id_h5p" class="file-trigger" tabindex="0">Select H5P Libraries...</label>
+		</div>
+		<p class="file-return"></p>
+		{{form.non_field_errors}}
+	</form>
+</div>
+<div class="configuration">
+	{% if request.GET.contentId %}
+	<a href="{% url 'h5pcontent' request.GET.contentId %}">
+		<input type="submit" class="submit_editor" id="view" value="View video" />
+	</a>
+	{% endif %}
+	<a href="{% url 'h5phome' %}">
+		<input type="submit" class="submit_editor" id="back" value="Back to home" />
+	</a>
+</div>
+{% endblock %}

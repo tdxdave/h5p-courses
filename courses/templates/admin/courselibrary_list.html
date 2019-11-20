@@ -1,0 +1,11 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+<h2>Course Libraries</h2>
+<p><a href="{% url "admin_courselibrary_create" %}">Add Course Library</a></p>
+<ul>
+  {% for course_lib in course_libs %}
+  <li><a href="{% url "admin_courselibrary_view" course_lib.id %}">{{ course_lib.title }}</a> <a class="btn btn-default" href="{% url "admin_courselibrary_update" course_lib.id %}">Edit</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

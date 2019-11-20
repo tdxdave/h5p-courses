@@ -11,7 +11,7 @@
   <p><a href="{% url "admin_org_course_library_create" organization_id=organization.id %}">Assign Course Library</a>
   <ul>
     {% for cl in organization.course_libraries.all %}
-      <li>{{ cl.course_library.title }} <a href="{% url "admin_org_course_library_delete" pk=cl.id %}">Unassign</a></li>
+      <li>{{ cl.course_library.title }} - {% if cl.required %} Required <a href="{% url "admin_org_course_library_toggle" org_course_library_id=cl.id %}">Make Optional</a> {% else %}Not Required <a href="{% url "admin_org_course_library_toggle" org_course_library_id=cl.id %}">Make Required</a>{% endif %} | <a href="{% url "admin_org_course_library_delete" pk=cl.id %}">Unassign</a></li>
       {% endfor %}
    </ul>
   <h3>Learners</h3>

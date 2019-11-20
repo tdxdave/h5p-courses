@@ -1,0 +1,11 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+<h2>Organizations</h2>
+<p><a href="{% url "admin_org_create" %}">Add Organization</a></p>
+<ul>
+  {% for org in orgs %}
+  <li><a href="{% url "admin_org_view" org.id %}">{{ org.name }}</a> ({{ org.org_type }}) <a class="btn btn-default" href="{% url "admin_org_update" org.id %}">Edit</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

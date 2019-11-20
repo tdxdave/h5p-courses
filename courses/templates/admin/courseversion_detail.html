@@ -1,0 +1,8 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+  <h2>{{ courseversion.course.title }}</h2>
+  {% if courseversion.content %}
+    {% include "course_content.html" %}
+  {% endif %}
+{% endblock %}

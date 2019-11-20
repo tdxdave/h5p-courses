@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% block body %}
+  <h2>{{ course.title }}</h2>
+  <h3>Versions</h3>
+  <a href="{% url "admin_courseversion_create" course.id %}">Add Version</a>
+  <ul>
+  {% for version in course.versions.all %}
+  <li>{{ version.year }}</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

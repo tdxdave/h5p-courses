@@ -12,3 +12,10 @@
   </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+     $('#id_training_year_start').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+    </script>
+{% endblock %}
