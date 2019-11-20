@@ -47,7 +47,7 @@ urlpatterns = [
     path("account/", include("account.urls")),
     path("login/", LearnerLoginView.as_view(), name="learner_login"),
     path("setup/", LearnerSetupView.as_view(), name="learner_setup"),
-    path("dashboard", LearnerCourseList.as_view(), name="learner_course_list"),
+    path("dashboard/", LearnerCourseList.as_view(), name="learner_course_list"),
     path("course/<int:pk>/", LearnerCourseDetail.as_view(), name="learner_course_view"),    
     path("admin/", AdminDashboardView.as_view(), name="course_admin"),
     path("admin/courses/", AdminCourseList.as_view(), name="admin_course_list"),
@@ -78,3 +78,9 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
