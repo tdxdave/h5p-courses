@@ -1,0 +1,10 @@
+{% extends "site_base.html" %}
+{% load bootstrap_tags %}
+
+{% block body %}
+<form method="POST">
+{{ form|as_bootstrap }}
+{% csrf_token %}
+<input type="submit" value="Save"></input>
+</form>
+{% endblock %}
