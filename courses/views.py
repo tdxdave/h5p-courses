@@ -232,6 +232,7 @@ class AdminCourseLibraryUpdate(UpdateView):
     model = CourseLibrary
     fields = ['title']
     success_url = reverse_lazy("admin_courselibrary_list")
+    template_name = "admin/courselibrary_form.html"    
     
 @method_decorator(login_required, name='dispatch')
 class AdminCourseLibraryDelete(DeleteView):
