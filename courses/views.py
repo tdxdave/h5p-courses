@@ -1,5 +1,6 @@
 import sys
 
+from django.conf import settings
 from django.db.models import Value
 from django.db.models.functions import Concat,Lower
 from django.shortcuts import render, redirect, get_object_or_404
@@ -31,6 +32,8 @@ from django.views.generic.edit import (
 
 from django_tables2 import Column, Table, SingleTableMixin
 
+from h5pp.h5p.editor.h5peditormodule import h5peditorContent
+
 from .models import (
     Learner,
     Course,
@@ -44,9 +47,13 @@ from .models import (
 
 from .forms import (
     AdminOrgCourseLibraryForm,
+    AdminCourseLibraryCourseForm,
+    AdminCourseVersionForm,
     LearnerLoginForm,
     LearnerSetupForm
 )
+
+H5P_LIBRARY_DIR = settings.MEDIA_ROOT + "h5p/libraries/"
 
 from courses.utils import course_learner_status_update
 
@@ -102,15 +109,15 @@ class LearnerSetupView(FormView):
         org = Organization.objects.get(id=self.request.session['organization'])
         username = org.name + ' ' + form.cleaned_data['first_name'] + ' ' + form.cleaned_data['last_name']
         if form.cleaned_data['email'] != '':
-            username = username + ' ' +form.cleaned_data['email']
+            username = username + ' ' + form.cleaned_data['email']
 
-        user, created = User.objects.get_or_create(username = username, first_name = form.cleaned_data['first_name'], last_name = form.cleaned_data['last_name'], email = form.cleaned_data['email'])
+        user, created = User.objects.get_or_create(username=username, first_name=form.cleaned_data['first_name'], last_name = form.cleaned_data['last_name'], email=form.cleaned_data['email'])
         user.save()
         if created:
-            learner = Learner.objects.create(user = user,organization = org)
+            learner = Learner.objects.create(user=user,organization=org)
             learner.save()
         else:
-            learner = Learner.objects.get(user = user)
+            learner = Learner.objects.get(user=user)
         login(self.request,user)            
         return redirect('learner_course_list')
 
@@ -135,10 +142,16 @@ class LearnerCourseList(ListView):
 
 
 class LearnerCourseDetail(DetailView):
-    model=Course
-
+    model=CourseVersion
+    template_name = "course_detail.html"
+    context_object_name = "course"
+    
+    def get_context_data(self,object):
+        ctx = super(LearnerCourseDetail, self).get_context_data()
+        return ctx
+    
 # Admin Views
-
+@method_decorator(login_required, name='dispatch')
 class AdminDashboardView(TemplateView):
     template_name = "admin/dashboard.html"
 
@@ -152,9 +165,9 @@ class AdminCourseCreate(CreateView):
     model = Course
     fields = ['title','certificate_title','tags','is_enabled']
     success_url = reverse_lazy("admin_course_list")
-    template_name = "admin/course_form.html"    
+    template_name = "admin/course_form.html"
     
-@method_decorator(login_required, name='dispatch')    
+@method_decorator(login_required, name='dispatch')
 class AdminCourseUpdate(UpdateView):
     model = Course
     fields = ['title','certificate_title','tags','is_enabled']
@@ -177,8 +190,17 @@ class AdminCourseVersionCreate(CreateView):
     fields = ['course','year','content']
     success_url = reverse_lazy("admin_course_list")
     template_name = "admin/courseversion_form.html"    
+
+    def get_initial(self):
+        data = super(AdminCourseVersionCreate, self).get_initial()
+        data['course'] = self.kwargs['course_id']
+        return data
+
+    def get_success_url(self):
+        return reverse_lazy("admin_course_view", kwargs={'pk': self.kwargs['course_id']})
+
     
-@method_decorator(login_required, name='dispatch')    
+@method_decorator(login_required, name='dispatch')   
 class AdminCourseVersionUpdate(UpdateView):
     model = CourseVersion
     fields = ['course','year','content']
@@ -239,14 +261,14 @@ class AdminCourseLibraryDelete(DeleteView):
     model = CourseLibrary
     success_url = reverse_lazy("courselibrary_list")
 
-    
+   
 @method_decorator(login_required, name='dispatch')
 class AdminCourseLibraryList(ListView):
     model = CourseLibrary
     template_name = "admin/courselibrary_list.html"
     context_object_name = "course_libs"
 
-    
+   
 class AdminCourseLibraryDetail(DetailView):
     model=CourseLibrary
     template_name = "admin/courselibrary_detail.html"
@@ -254,10 +276,24 @@ class AdminCourseLibraryDetail(DetailView):
 @method_decorator(login_required, name='dispatch')
 class AdminCourseLibraryCourseCreate(CreateView):
     model = CourseLibraryCourse
-    fields = ['course_library','course_version','description','sort_order']
+    fields = AdminCourseLibraryCourseForm
     success_url = reverse_lazy("admin_courselibrary_list")
     template_name = "admin/courselibrarycourse_form.html"
 
+    def get_initial(self):
+        data = super(AdminCourseLibraryCourseCreate, self).get_initial()
+        data['course_library'] = self.kwargs['course_library_id']
+        return data
+
+    def get_form_kwargs(self):
+        kwargs = super(AdminCourseLibraryCourseCreate, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy("admin_courselibrary_view", kwargs={'pk': self.kwargs['course_library_id']})
+
+   
 @method_decorator(login_required, name='dispatch')
 class AdminOrgCourseLibraryCreate(CreateView):
     model = OrganizationCourseLibrary
@@ -352,7 +388,7 @@ class ReportOrgCourseLearnerStatusList(SingleTableMixin,ListView):
 # TODO Create some courses. Button to click that sets status. Test reports
 # and billing
 
-# when its all working, get the H5P stuff from MGH
+# when its all working, get the H5P stuff 
 @method_decorator(login_required, name='dispatch')
 class ReportCourseList(ListView):
     model = Course
@@ -370,10 +406,11 @@ class ReportCourseList(ListView):
         ctx['organization'] = self.organization
         return ctx
         
-        
+@login_required        
 def report_billing(request):
     return ""
 
+@login_required
 def report_learner_certificate(request):
     return ""
 
@@ -404,3 +441,17 @@ def org_course_library_required_toggle(request,org_course_library_id):
             e = sys.exc_info()[0]
             messages.info(request,e)
     return redirect(reverse("admin_org_view",kwargs={'pk':course_library.organization_id}))
+
+
+@login_required
+def h5p_libraries_ajax(request):
+    # read all library.json
+    return ""
+
+class H5PEditorView(TemplateView):
+    template_name = "h5peditor.html"
+    
+    def get_context_data(self):
+        ctx = super(H5PEditorView, self).get_context_data()
+        ctx['editor'] = h5peditorContent(self.request)
+        return ctx

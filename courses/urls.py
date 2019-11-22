@@ -3,10 +3,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-
-
+import h5pp
 
 from .views import (
+    H5PEditorView,
     LearnerLoginView,
     LearnerSetupView,
     LearnerCourseDetail,
@@ -44,7 +44,7 @@ from .views import (
 urlpatterns = [
     path("", TemplateView.as_view(template_name="homepage.html"), name="home"),
     path("admin/admin/", admin.site.urls),
-    path("account/", include("account.urls")),
+    path("account/", include(("account.urls","account"), namespace="account")),
     path("login/", LearnerLoginView.as_view(), name="learner_login"),
     path("setup/", LearnerSetupView.as_view(), name="learner_setup"),
     path("dashboard/", LearnerCourseList.as_view(), name="learner_course_list"),
@@ -74,7 +74,10 @@ urlpatterns = [
     path("admin/orgs/<organization_id>/courses/", ReportCourseList.as_view(), name="admin_report_course_list"),
     path("admin/orgs/<int:organization_id>/courses/<course_id>/learners/", ReportOrgCourseLearnerStatusList.as_view(), name="admin_report_org_course_learner_list"),    
     path("admin/course/<course_id>/status-update/", course_status_update, name="course_status_update"),
-    path("admin/orgs/course-lib/<int:org_course_library_id>/toggle/", org_course_library_required_toggle, name="admin_org_course_library_toggle")
+    path("admin/orgs/course-lib/<int:org_course_library_id>/toggle/", org_course_library_required_toggle, name="admin_org_course_library_toggle"),
+    path("h5pdemo/", TemplateView.as_view(template_name="h5p_demo.html"), name="h5p_demo"),
+    path("h5peditor/", H5PEditorView.as_view(), name="h5p_editor"),
+    path("h5p/", include(('h5pp.urls', 'h5pp'), namespace="h5pp")),    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -82,6 +85,6 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
+        path('__debug__/', include(debug_toolbar.urls, namespace="debug_toolbar")),
     ] + urlpatterns
 

@@ -157,7 +157,8 @@ INSTALLED_APPS = [
     # external
     "account",
     "django_tables2",
-    
+    "h5pp",
+ 
     # project
     "h5p",
     "courses",
@@ -215,3 +216,11 @@ ACCOUNT_USE_AUTH_AUTHENTICATE = True
 AUTHENTICATION_BACKENDS = [
     "account.auth_backends.UsernameAuthenticationBackend",
 ]
+
+H5P_VERSION = '7.x'
+H5P_DEV_MODE = 0
+H5P_PATH = os.path.join(BASE_DIR, 'h5pp/static/h5p')
+H5P_URL = '/h5p/'
+H5P_SAVE = 30
+H5P_EXPORT = '/exports/'
+H5P_LANGUAGE = 'en'

@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 
 from .models import (
     CourseLibrary,
+    CourseLibraryCourse,
+    CourseVersion,
     Organization,
     OrganizationCourseLibrary
 )
@@ -49,3 +51,23 @@ class AdminOrgCourseLibraryForm(forms.ModelForm):
         if organization_id is not None:
             assigned_libs = CourseLibrary.objects.filter(organization_library__organization=organization_id)
             self.fields['course_library'].queryset = CourseLibrary.objects.exclude(id__in=assigned_libs)
+
+class AdminCourseLibraryCourseForm(forms.ModelForm):
+    class Meta:
+        model = CourseLibraryCourse
+        fields = ('course_library','course_version','description','sort_order')
+        widgets = {'course_library' : forms.HiddenInput()}
+        
+    def __init__(self, course_library_id=None, *args, **kwargs):
+        super(AdminCourseLibraryCourseForm, self).__init__(*args, **kwargs)
+        if course_library_id is not None:
+            assigned_courses = CourseVersion.objects.filter(libraries__course_library=course_library_id)
+            self.fields['course_version'].queryset = CourseVersion.objects.exclude(id__in=assigned_courses)
+
+class AdminCourseVersionForm(forms.ModelForm):
+    class Meta:
+        model = CourseVersion
+        fields = ('course','year','content')
+        widgets = {'course' : forms.HiddenInput()}
+
+        
