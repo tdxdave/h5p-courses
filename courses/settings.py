@@ -160,7 +160,6 @@ INSTALLED_APPS = [
     "h5pp",
  
     # project
-    "h5p",
     "courses",
 ]
 
