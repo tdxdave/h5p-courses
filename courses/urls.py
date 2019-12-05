@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 import h5pp
@@ -44,7 +44,7 @@ from .views import (
 urlpatterns = [
     path("", TemplateView.as_view(template_name="homepage.html"), name="home"),
     path("admin/admin/", admin.site.urls),
-    path("account/", include(("account.urls","account"), namespace="account")),
+    re_path(r"^account/", include("account.urls")),
     path("login/", LearnerLoginView.as_view(), name="learner_login"),
     path("setup/", LearnerSetupView.as_view(), name="learner_setup"),
     path("dashboard/", LearnerCourseList.as_view(), name="learner_course_list"),

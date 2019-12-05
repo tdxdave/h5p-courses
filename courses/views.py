@@ -145,7 +145,14 @@ class LearnerCourseDetail(DetailView):
     model=CourseVersion
     template_name = "course_detail.html"
     context_object_name = "course"
-    
+
+    # TODO Generate data structure for
+    # H5P Standalone
+    # make sure we can load the H5P js stuff
+    # GET NEW H5P Standalone,
+    # configure pip or whatever to put it somewhere useful (use npm one of those...)
+    # https://github.com/tunapanda/h5p-standalone
+
     def get_context_data(self,object):
         ctx = super(LearnerCourseDetail, self).get_context_data()
         return ctx

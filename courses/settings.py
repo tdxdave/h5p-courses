@@ -151,7 +151,6 @@ INSTALLED_APPS = [
     "bootstrapform",
     "django_forms_bootstrap",
     "pinax_theme_bootstrap",
-#    "pinax.eventlog",
     "taggit",
 
     # external
