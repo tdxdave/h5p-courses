@@ -119,14 +119,6 @@ def h5p_file_process(h5p_file, content_name=""):
             for ld in libdirs:
                 library = process_library(ld)
                 libraries.append(library)
-                # loop over libraries again to create dependencies
-            #content_libraries = []
-            #for library in libraries:
-                #deps = process_library_dependencies(library)
-                #deps = {"content_libraries":[]}
-                #for content_lib in deps["content_libraries"]:
-                #    if content_lib not in content_libraries:
-                #        content_libraries.append(content_lib)
 
             if os.path.exists(tmpdir + "/content"):
                 content_json_path = tmpdir + "/content/content.json"
@@ -136,16 +128,6 @@ def h5p_file_process(h5p_file, content_name=""):
                     main_library = H5PLibrary.objects.get(machine_name=h5p_json["mainLibrary"])
                     content = H5PContent.objects.create(json_content=json.dumps(content_json), main_library=main_library, name=content_name)
 
-                    # NOPE, we let h5p-standalone do the work.
-                    # we need to get the dependency tree level
-                    # so we can load all the libraries in order
-                    #content_lib_ids_list = [0]
-                    #for content_lib in content_libraries:
-                    #    content_lib_ids_list.append(content_lib.id)
-                    #content_lib_ids = tuple(content_lib_ids_list)
-                    #required_libraries = H5PLibrary.objects.raw("with recursive tree as (select h5p_h5plibrary.id,required_library_id, 0 as level from h5p_h5plibrary left join h5p_h5plibrarydependency on h5p_h5plibrary.id = h5p_h5plibrarydependency.library_id where h5p_h5plibrary.id in %s union all select h5p_h5plibrary.id,h5p_h5plibrarydependency.required_library_id, tree.level + 1 from tree, h5p_h5plibrary left join h5p_h5plibrarydependency on h5p_h5plibrary.id = h5p_h5plibrarydependency.library_id where h5p_h5plibrary.id = tree.required_library_id) select h5p_h5plibrary.*, max(tree.level) as level from h5p_h5plibrary,tree where tree.id = h5p_h5plibrary.id group by h5p_h5plibrary.id", params=[content_lib_ids])
-                    #for content_lib in required_libraries:
-                    #    content_library, created = H5PContentLibrary.objects.get_or_create(content=content, library=content_lib, dependency_type="preloaded", weight=content_lib.level)
                     for key in [("embedTypes", "embed_types"), ("contentType", "content_type"), ("author", "author"), ("license", "license"), ("metaKeywords", "meta_keywords"), ("metaDescription", "meta_description"), ("filtered", "filtered"), ("slug", "slug")]:
                         json_name = key[0]
                         db_name = key[1]
