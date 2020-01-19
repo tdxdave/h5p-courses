@@ -32,7 +32,6 @@ from django.views.generic.edit import (
 
 from django_tables2 import Column, Table, SingleTableMixin
 
-from h5pp.h5p.editor.h5peditormodule import h5peditorContent
 
 from .models import (
     Learner,
@@ -460,5 +459,6 @@ class H5PEditorView(TemplateView):
     
     def get_context_data(self):
         ctx = super(H5PEditorView, self).get_context_data()
-        ctx['editor'] = h5peditorContent(self.request)
+        ctx['editor'] = ""
+        #h5peditorContent(self.request)
         return ctx

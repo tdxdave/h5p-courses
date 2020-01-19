@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-import h5pp
 
 from .views import (
     H5PEditorView,
@@ -77,7 +76,7 @@ urlpatterns = [
     path("admin/orgs/course-lib/<int:org_course_library_id>/toggle/", org_course_library_required_toggle, name="admin_org_course_library_toggle"),
     path("h5pdemo/", TemplateView.as_view(template_name="h5p_demo.html"), name="h5p_demo"),
     path("h5peditor/", H5PEditorView.as_view(), name="h5p_editor"),
-    path("h5p/", include(('h5pp.urls', 'h5pp'), namespace="h5pp")),    
+    re_path("^h5p/", include("h5p.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

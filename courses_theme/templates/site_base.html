@@ -1,9 +1,13 @@
 {% extends "theme_bootstrap/base.html" %}
 {% load staticfiles %}
 
+{% block page_scripts %}
+{% end block %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/courses.css' %}">
 {% endblock %}
+{% block page_styles %}
+{% end block %}
 
 {% block body %}
 <h1>Test</h1>

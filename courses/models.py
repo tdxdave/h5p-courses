@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Group
 
-from h5pp.models import h5p_contents
+from h5p.models import H5PContent
 
 from taggit.managers import TaggableManager
 
@@ -17,7 +17,7 @@ class Course(models.Model):
     
 class CourseVersion(models.Model):
     course = models.ForeignKey(Course,related_name="versions", on_delete=models.CASCADE)
-    content = models.ForeignKey(h5p_contents, blank=True, null=True, on_delete=models.CASCADE)
+    content = models.ForeignKey(H5PContent, blank=True, null=True, on_delete=models.CASCADE)
     year = models.CharField("Year",max_length=16)
 
     def __unicode__(self):

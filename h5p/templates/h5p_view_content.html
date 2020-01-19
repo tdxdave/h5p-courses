@@ -1,0 +1,36 @@
+{% extends "site_base.html" %}
+{% load staticfiles %}
+
+{% block extra_head %}
+     <link type="text/css" rel="stylesheet" media="all" href="{% static "/h5p-standalone/styles/h5p.css" %}" />
+<script type="text/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "h5p-standalone/main.bundle.js" %}"></script>
+</head>
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block body %}
+  <div id="h5p-container"></div>
+
+  <script type="text/javascript">
+  $(document).ready(function () {
+    const {
+      H5P
+    } = H5PStandalone;
+    new H5P(document.getElementById('h5p-container'), '/site_media/media/h5p/content/{{content.id}}/', {
+      frameJs: '{% static "/h5p-standalone/frame.bundle.js" %}',
+      frameCss: '{% static "/h5p-standalone/dist/styles/h5p.css" %}'
+    },
+    {},
+    '/site_media/media/h5p/libraries/');
+    });
+  </script>
+
+{% endblock %}

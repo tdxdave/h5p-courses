@@ -1,0 +1,11 @@
+{% extends "site_base.html" %}
+{% block body %}
+<a class="btn btn-default" href="{% url 'h5p_editor' '' %}">Add Content</a>
+<table>
+  {% for c in h5p_content %}
+  <tr>
+    <td><a href="{% url 'h5p_view_content' c.id %}">{{ c.name }}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -156,7 +156,7 @@ INSTALLED_APPS = [
     # external
     "account",
     "django_tables2",
-    "h5pp",
+    "h5p",
  
     # project
     "courses",
