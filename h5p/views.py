@@ -99,3 +99,8 @@ def h5p_h5p_update(request):
     else:
         form = H5PUpdateForm()  # A empty, unbound form
     return render(request, "h5p_update.html", {"form": form})
+
+
+def h5p_ajax(request):
+    """ Ajax handler """
+    return render(request, "h5p_ajax.html")

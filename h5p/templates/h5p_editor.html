@@ -1,20 +1,10 @@
 {% extends "site_base.html" %}
 {% load staticfiles %}
 
-{% block page_scripts %}
-    <script type="text/javascript" src="{% static "/js/jquery.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/djangoajax.js"%}"></script>
-    <script type="text/javascript" src="{% static "/js/h5p.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5p-event-dispatcher.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5p-x-api-event.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5p-x-api.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5p-content-type.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5peditor-editor.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5peditor.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/language/en.js" %}"></script>
-    <script type="text/javascript" src="{% static "/js/h5peditor-init.js" %}"></script>
-
-
+{% block extra_head %}
+     <link type="text/css" rel="stylesheet" media="all" href="{% static "/h5p-standalone/styles/h5p.css" %}" />
+<script type="text/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "h5p-standalone/editor.bundle.js" %}"></script>
     <script type="text/javascript">
 
      (function ($) {
@@ -139,7 +129,24 @@
 {% endfor %}
 
 {% block body %}
-    <form class="node-form node-h5p_content-form" enctype="multipart/form-data" action="{% url 'h5p_add_content' %}" method="post" id="h5p-content-node-form" accept-charset="UTF-8">
+  <div id="h5p-container"></div>
+
+  <script type="text/javascript">
+  $(document).ready(function () {
+    const {
+      H5P
+    } = H5PStandalone;
+    new H5P(document.getElementById('h5p-container'), '/site_media/media/h5p/content/{{content.id}}/', {
+      frameJs: '{% static "/h5p-standalone/frame.bundle.js" %}',
+      frameCss: '{% static "/h5p-standalone/dist/styles/h5p.css" %}'
+    },
+    {},
+    '/site_media/media/h5p/libraries/');
+    });
+  </script>
+
+
+<form class="node-form node-h5p_content-form" enctype="multipart/form-data" action="{% url 'h5p_add_content' %}" method="post" id="h5p-content-node-form" accept-charset="UTF-8">
         {% csrf_token %}
         <div><div class="form-item form-type-textfield form-item-title">
             <label for="edit-title">Title <span class="form-required" title="This field is required.">*</span></label>

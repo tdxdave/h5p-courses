@@ -7,8 +7,6 @@ import os
 from .models import (
     H5PContent,
     H5PLibrary,
-    H5PContentLibrary,
-    H5PLibraryDependency
 )
 
 if not os.path.exists(settings.MEDIA_ROOT):
@@ -54,7 +52,6 @@ def process_library(ld):
         patch_version=ld_json["patchVersion"],
         title=ld_json["title"]
     )
-    print(ld_json["title"])
     if created:
         for key in [
                 ("preloadedJs", "preloaded_js"),
@@ -157,17 +154,11 @@ def process_update(h5p_file):
         if is_zipfile:
             with zipfile.ZipFile(file_path) as libzip:
                 libzip.extractall(tmpdir)
-            #print(glob.glob(tmpdir+"/*"))
             subdirs = get_subdirectories(tmpdir)
             libdirs = []
             for sd in subdirs:
                 if os.path.isfile(sd + "/library.json"):
                     libdirs.append(sd)
-            libraries = []
             for ld in libdirs:
                 library = process_library(ld)
-                libraries.append(library)
-            for lib in libraries:
-                process_library_dependencies(lib)
-
     return

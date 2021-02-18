@@ -25,30 +25,6 @@ class H5PLibrary(models.Model):
     def __str__(self):
         return self.title
 
-
-class H5PLibraryDependency(models.Model):
-    library = models.ForeignKey(H5PLibrary,on_delete=models.CASCADE)
-    required_library = models.ForeignKey(H5PLibrary,
-                                         related_name="required_library", on_delete=models.CASCADE)
-    dependency_type = models.CharField(
-        choices=[("dynamic", "dynamic"),
-                 ("preloaded", "preloaded"),
-                 ("editor", "editor")],
-        default="preloaded",
-        max_length=128,
-    )
-
-    def __str__(self):
-        return "{} depends on {}".format(self.library.title,
-                                         self.required_library.title)
-
-
-class H5PLibraryLanguage(models.Model):
-    library = models.ForeignKey(H5PLibrary, on_delete=models.CASCADE)
-    language_code = models.CharField(max_length=32)
-    language_json = models.TextField()
-
-
 class H5PContent(models.Model):
     name = models.CharField(max_length=255)
     intro = models.TextField()
@@ -64,19 +40,6 @@ class H5PContent(models.Model):
     filtered = models.TextField(blank=True)
     slug = models.CharField(max_length=128, blank=True)
     status = models.CharField(max_length=16, default="in progress")
-
-
-class H5PContentLibrary(models.Model):
-    library = models.ForeignKey(H5PLibrary, on_delete=models.CASCADE)
-    content = models.ForeignKey(H5PContent, on_delete=models.CASCADE)
-    dependency_type = models.CharField(
-        choices=[("dynamic", "dynamic"),
-                 ("preloaded", "preloaded"),
-                 ("editor", "editor")],
-        default="preloaded",
-        max_length=128,
-    )
-    weight = models.IntegerField(default=999999)
 
 
 class H5PPoint(models.Model):
