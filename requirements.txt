@@ -13,7 +13,7 @@ entrypoints==0.3
 flake8==3.7.9
 idna==2.8
 mccabe==0.6.1
-Pillow==6.2.1
+Pillow==8.1.1
 pinax-theme-bootstrap==8.0.1
 psycopg2==2.8.4
 pycodestyle==2.5.0
