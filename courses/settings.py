@@ -201,7 +201,7 @@ FIXTURE_DIRS = [os.path.join(PROJECT_ROOT, "fixtures")]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_URL = 'learner_login'
+LOGIN_URL = 'login'
 ACCOUNT_OPEN_SIGNUP = False
 ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False

@@ -18,7 +18,7 @@
                 {% endblocktrans %}
             </p>
             {% if not user.is_authenticated %}
-            {% url "learner_login" as login_url %}
+            {% url "account_login" as login_url %}
             {% url "account_signup" as signup_url %}
             <p>{% blocktrans %}<a href="{{ login_url }}" class="btn btn-default">Log In</a> to get started.{% endblocktrans %}</p>
             {% endif %}

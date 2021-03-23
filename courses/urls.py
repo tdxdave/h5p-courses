@@ -44,7 +44,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="homepage.html"), name="home"),
     path("admin/admin/", admin.site.urls),
     re_path(r"^account/", include("account.urls")),
-    path("login/", LearnerLoginView.as_view(), name="learner_login"),
+    #path("login/", LearnerLoginView.as_view(), name="learner_login"),
     path("setup/", LearnerSetupView.as_view(), name="learner_setup"),
     path("dashboard/", LearnerCourseList.as_view(), name="learner_course_list"),
     path("course/<int:pk>/", LearnerCourseDetail.as_view(), name="learner_course_view"),    

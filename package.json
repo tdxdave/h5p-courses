@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "h5p-standalone": "^2.0.2"
+    "h5p-standalone": "tdxdave/h5p-standalone.git"
   }
 }
